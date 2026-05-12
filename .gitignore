@@ -1,0 +1,27 @@
+# Python cache/files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables / secrets
+.env
+.env.*
+
+# Build/output folders
+dist/
+build/
+generated-project/
+demo-site/
+my-site/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
