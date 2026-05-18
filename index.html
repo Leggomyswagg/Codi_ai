@@ -1,8 +1,602 @@
 <!doctype html>
-<html>
-  <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>codi-ai</title></head>
-  <body>
-    <h1>codi-ai is live 🚀</h1>
-    <p>This is the landing page.</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codi AI – Describe it. Ship it.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080810;
+      --surface: #0f0f1a;
+      --surface-2: #16162a;
+      --border: #1e1e35;
+      --accent: #7c3aed;
+      --accent-light: #a855f7;
+      --accent-glow: rgba(124, 58, 237, 0.3);
+      --text: #f0f0ff;
+      --muted: #8888aa;
+      --green: #10b981;
+      --red: #ef4444;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(8, 8, 16, 0.9);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo em {
+      font-style: normal;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      -webkit-text-fill-color: var(--muted);
+      margin-left: 6px;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 80px 20px 56px;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 7vw, 68px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #4f46e5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .builder {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: 0 0 80px rgba(124, 58, 237, 0.07);
+    }
+
+    .field > label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      padding: 14px 16px;
+      resize: vertical;
+      min-height: 120px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    textarea::placeholder { color: var(--muted); }
+
+    .toggle {
+      display: flex;
+      gap: 8px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .toggle-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .toggle-btn:hover:not(.active) {
+      border-color: var(--accent-light);
+      color: var(--text);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .feature-chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 13px;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .feature-chip:hover { border-color: var(--accent-light); color: var(--text); }
+
+    .feature-chip.on {
+      border-color: var(--accent);
+      color: var(--text);
+      background: rgba(124, 58, 237, 0.12);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1px solid var(--muted);
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .feature-chip.on .dot {
+      background: var(--accent-light);
+      border-color: var(--accent-light);
+    }
+
+    .generate-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 24px var(--accent-glow);
+    }
+
+    .generate-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 32px rgba(124, 58, 237, 0.45);
+    }
+
+    .generate-btn:active:not(:disabled) { transform: none; }
+    .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .spinner {
+      width: 17px;
+      height: 17px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-bar {
+      max-width: 720px;
+      margin: 0 auto 16px;
+      padding: 0 20px;
+    }
+
+    .error-inner {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #fca5a5;
+    }
+
+    .output {
+      max-width: 900px;
+      margin: 0 auto 80px;
+      padding: 0 20px;
+    }
+
+    .output-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+
+    .output-header h2 { font-size: 20px; font-weight: 700; }
+
+    .output-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .btn-ghost {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .btn-ghost:hover { border-color: var(--accent-light); }
+
+    .btn-fill {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-fill:hover { background: var(--accent-light); }
+
+    .summary-bar {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-size: 13px;
+      color: #6ee7b7;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .file-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      background: var(--surface-2);
+    }
+
+    .file-tab {
+      padding: 10px 18px;
+      font-size: 13px;
+      font-family: var(--mono);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .file-tab:hover { color: var(--text); }
+    .file-tab.active { color: var(--accent-light); border-bottom-color: var(--accent-light); }
+
+    .code-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-name {
+      font-size: 12px;
+      font-family: var(--mono);
+      color: var(--muted);
+    }
+
+    pre {
+      padding: 20px;
+      overflow-x: auto;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.75;
+      color: #c9d1d9;
+      white-space: pre;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 640px) {
+      header { padding: 16px 20px; }
+      .hero { padding: 48px 20px 32px; }
+      .card { padding: 20px; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .output-header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">codi <em>AI</em></div>
+  <div class="badge">Beta</div>
+</header>
+
+<section class="hero">
+  <h1>Describe it.<br><span>Ship it.</span></h1>
+  <p>Turn any idea into a working website or web app — powered by AI.</p>
+</section>
+
+<section class="builder">
+  <div class="card">
+    <div class="field">
+      <label>What do you want to build?</label>
+      <textarea id="description" rows="5"
+        placeholder="e.g. A task manager where users can create boards, add cards, drag to reorder, and mark items complete..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Output type</label>
+      <div class="toggle">
+        <button class="toggle-btn active" onclick="setTarget('website', this)">🌐 Website</button>
+        <button class="toggle-btn" onclick="setTarget('app', this)">⚡ Web App</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Include features (optional)</label>
+      <div class="features-grid">
+        <div class="feature-chip" onclick="toggleChip(this, 'authentication')">
+          <div class="dot"></div>🔐 Auth
+        </div>
+        <div class="feature-chip" onclick="toggleChip(this, 'database')">
+          <div class="dot"></div>🗄️ Database
+        </div>
+        <div class="feature-chip" onclick="toggleChip(this, 'REST API')">
+          <div class="dot"></div>🔌 REST API
+        </div>
+        <div class="feature-chip" onclick="toggleChip(this, 'payments')">
+          <div class="dot"></div>💳 Payments
+        </div>
+        <div class="feature-chip" onclick="toggleChip(this, 'real-time updates')">
+          <div class="dot"></div>⚡ Real-time
+        </div>
+        <div class="feature-chip" onclick="toggleChip(this, 'dark mode')">
+          <div class="dot"></div>🌙 Dark mode
+        </div>
+      </div>
+    </div>
+
+    <button class="generate-btn" id="genBtn" onclick="generate()">
+      <span id="btnLabel">Generate with Codi →</span>
+      <div class="spinner hidden" id="spinner"></div>
+    </button>
+  </div>
+</section>
+
+<div class="error-bar hidden" id="errorBar">
+  <div class="error-inner" id="errorMsg"></div>
+</div>
+
+<section class="output hidden" id="outputSection">
+  <div class="output-header">
+    <div>
+      <h2>Your project is ready</h2>
+    </div>
+    <div class="output-actions">
+      <button class="btn-ghost" onclick="copyActive()">Copy file</button>
+      <button class="btn-fill" onclick="downloadZip()">⬇ Download ZIP</button>
+    </div>
+  </div>
+
+  <div class="summary-bar hidden" id="summaryBar">
+    <span>✓</span><span id="summaryText"></span>
+  </div>
+
+  <div class="code-box">
+    <div class="file-tabs" id="fileTabs"></div>
+    <div class="code-bar">
+      <span class="code-name" id="activeFileName"></span>
+      <button class="btn-ghost" style="font-size:12px;padding:4px 10px;" onclick="copyActive()">Copy</button>
+    </div>
+    <pre><code id="codeView"></code></pre>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+  let target = 'website';
+  let files = [];
+  let activeIdx = 0;
+
+  function setTarget(type, btn) {
+    target = type;
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function toggleChip(el) {
+    el.classList.toggle('on');
+  }
+
+  async function generate() {
+    const desc = document.getElementById('description').value.trim();
+    if (!desc) { showError('Please describe what you want to build.'); return; }
+
+    const features = [...document.querySelectorAll('.feature-chip.on')]
+      .map(el => el.getAttribute('onclick').match(/'([^']+)'/)[1]);
+
+    setLoading(true);
+    clearError();
+    document.getElementById('outputSection').classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: desc, target, features }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Generation failed');
+
+      files = data.files || [];
+      renderOutput(data);
+    } catch (err) {
+      showError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function renderOutput(data) {
+    const section = document.getElementById('outputSection');
+
+    if (data.summary) {
+      document.getElementById('summaryText').textContent = data.summary;
+      document.getElementById('summaryBar').classList.remove('hidden');
+    }
+
+    const tabs = document.getElementById('fileTabs');
+    tabs.innerHTML = '';
+    files.forEach((f, i) => {
+      const tab = document.createElement('div');
+      tab.className = 'file-tab' + (i === 0 ? ' active' : '');
+      tab.textContent = f.name;
+      tab.onclick = () => showFile(i);
+      tabs.appendChild(tab);
+    });
+
+    if (files.length) showFile(0);
+    section.classList.remove('hidden');
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function showFile(i) {
+    activeIdx = i;
+    const f = files[i];
+    document.getElementById('codeView').textContent = f.content;
+    document.getElementById('activeFileName').textContent = f.name;
+    document.querySelectorAll('.file-tab').forEach((t, j) => t.classList.toggle('active', j === i));
+  }
+
+  function copyActive() {
+    if (!files[activeIdx]) return;
+    navigator.clipboard.writeText(files[activeIdx].content).then(() => {
+      const btns = document.querySelectorAll('[onclick="copyActive()"]');
+      btns.forEach(b => { const o = b.textContent; b.textContent = 'Copied!'; setTimeout(() => b.textContent = o, 1500); });
+    });
+  }
+
+  async function downloadZip() {
+    if (!files.length) return;
+    const zip = new JSZip();
+    const dir = zip.folder('codi-project');
+    files.forEach(f => dir.file(f.name, f.content));
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'codi-project.zip';
+    a.click();
+  }
+
+  function setLoading(on) {
+    document.getElementById('genBtn').disabled = on;
+    document.getElementById('btnLabel').textContent = on ? 'Generating...' : 'Generate with Codi →';
+    document.getElementById('spinner').classList.toggle('hidden', !on);
+  }
+
+  function showError(msg) {
+    document.getElementById('errorMsg').textContent = msg;
+    document.getElementById('errorBar').classList.remove('hidden');
+  }
+
+  function clearError() {
+    document.getElementById('errorBar').classList.add('hidden');
+  }
+</script>
+</body>
 </html>
