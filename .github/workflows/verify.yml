@@ -1,0 +1,42 @@
+name: Verify generated projects
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  generator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: python -m unittest -v test_agent_builder.py
+      - name: Generate both supported targets
+        run: |
+          python agent_builder.py --input agent_builder.py --target website --out /tmp/codi-site
+          python agent_builder.py --input agent_builder.py --target app --out /tmp/codi-app
+      - name: Build generated website
+        working-directory: /tmp/codi-site
+        run: npm install --ignore-scripts && npm run build
+      - name: Build generated React app
+        working-directory: /tmp/codi-app
+        run: npm install --ignore-scripts && npm run build
+      - name: Verify generated backend
+        run: |
+          python -m pip install -r /tmp/codi-app/backend/requirements.txt httpx==0.28.1
+          PYTHONPATH=/tmp/codi-app python - <<'PY'
+          from fastapi.testclient import TestClient
+          from backend.main import app
+          response = TestClient(app).get('/api/health')
+          assert response.status_code == 200
+          assert response.json() == {'status': 'ok'}
+          PY
